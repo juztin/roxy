@@ -8,7 +8,7 @@ package main
 import (
 	"net/http"
 
-	"minty.io/mintyproxy/proxy"
+	"code.minty.io/mintyproxy/proxy"
 )
 
 func main() {
