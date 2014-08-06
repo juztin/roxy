@@ -15,16 +15,16 @@ func main() {
 	p := proxy.New()
 
 	rp := p.ForPattern("/", proxy.Directors(
+		// Proxy http, or http and https.
 		//proxy.ToPort(8777),
 		proxy.ToPorts(8777, 8778),
 	))
-	rp.Transport = &http.Transport{Proxy: http.ProxyFromEnvironment,
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 
 	// http
 	//p.ForPattern("/", proxy.ToPort(8777))
 	// https
 	rp := p.ForPattern("/", proxy.ToPort(8778))
+	// Ignore SSL validation when proxying.
 	rp.Transport = &http.Transport{Proxy: http.ProxyFromEnvironment,
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 
