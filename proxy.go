@@ -24,9 +24,10 @@ type Director func(req *http.Request)
 // Type Proxy implements an http.Handler
 // that proxies http requests
 type Proxy struct {
-	mu    sync.RWMutex
-	hosts map[string]*httputil.ReverseProxy
-	mux   *mux.ServeMux
+	mu       sync.RWMutex
+	hosts    map[string]*httputil.ReverseProxy
+	mux      *mux.ServeMux
+	ProxyTLS bool
 }
 
 // Type Directors chains all of the given directors
@@ -157,7 +158,7 @@ func (p *Proxy) HandleFunc(pattern string, fn func(http.ResponseWriter, *http.Re
 func (p Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	req.URL.Host = req.Host
 	req.URL.Scheme = "http"
-	if req.TLS != nil {
+	if p.ProxyTLS && req.TLS != nil {
 		req.URL.Scheme = "https"
 	}
 
@@ -173,7 +174,8 @@ func (p Proxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 // New returns a new proxy.
 func New() *Proxy {
 	return &Proxy{
-		hosts: make(map[string]*httputil.ReverseProxy),
-		mux:   mux.NewServeMux(),
+		hosts:    make(map[string]*httputil.ReverseProxy),
+		mux:      mux.NewServeMux(),
+		ProxyTLS: false,
 	}
 }
