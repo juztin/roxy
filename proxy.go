@@ -13,7 +13,7 @@ import (
 	"strings"
 	"sync"
 
-	"code.minty.io/marbles/mux"
+	"github.com/juztin/marbles/mux"
 )
 
 // Type Director receives an http.Request that
